@@ -31,6 +31,29 @@ router.get("/", (req, res) => {
   });
 });
 
+// GET all comments for one anime
+router.get("/:id/comments", (req, res) => {
+  const { id } = req.params;
+
+  const sql = `
+    SELECT id, anime_id, comment, created_at
+    FROM comments
+    WHERE anime_id = ?
+    ORDER BY id DESC
+  `;
+
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        message: "Failed to fetch comments",
+        error: err.message
+      });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
 // GET one anime with average rating
 router.get("/:id", (req, res) => {
   const { id } = req.params;
@@ -65,29 +88,6 @@ router.get("/:id", (req, res) => {
     }
 
     res.status(200).json(results[0]);
-  });
-});
-
-// GET all comments for one anime
-router.get("/:id/comments", (req, res) => {
-  const { id } = req.params;
-
-  const sql = `
-    SELECT id, anime_id, comment, created_at
-    FROM comments
-    WHERE anime_id = ?
-    ORDER BY id DESC
-  `;
-
-  db.query(sql, [id], (err, results) => {
-    if (err) {
-      return res.status(500).json({
-        message: "Failed to fetch comments",
-        error: err.message
-      });
-    }
-
-    res.status(200).json(results);
   });
 });
 
