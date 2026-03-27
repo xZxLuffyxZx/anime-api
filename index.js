@@ -33,4 +33,11 @@ app.get("/test-db", (req, res) => {
 
 app.use("/api/anime", animeRoutes);
 
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3333;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
 module.exports = app;
